@@ -3,7 +3,9 @@ class TweetsController < ApplicationController
   before_action :move_to_index, except: [:index, :show, :search]
 
   def index
-    @tweets = Tweet.includes(:user).order("created_at DESC")
+    # @tweets = Tweet.includes(:user).order("created_at DESC")　元々のコード下はfind_by_sqlメソッドを使用
+    query = "SELECT * FROM tweets"
+    @tweets = Tweet.find_by_sql(query)
   end
 
   def new
@@ -36,7 +38,7 @@ class TweetsController < ApplicationController
   end
 
   def search
-    @tweets = Tweet.search(params[:keyword])
+    @tweets = SearchTweetsService.search(params[:keyword])
   end
   
   private
